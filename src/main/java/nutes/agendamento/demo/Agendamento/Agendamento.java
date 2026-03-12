@@ -1,4 +1,4 @@
-package Agendamento;
+package nutes.agendamento.demo.Agendamento;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
