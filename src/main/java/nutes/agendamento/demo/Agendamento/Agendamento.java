@@ -28,9 +28,6 @@ public class Agendamento {
     public Agendamento() {
     }
 
-    // 5. Getters e Setters (As "portas" para acessar ou modificar os dados)
-    // Abaixo está apenas um exemplo de como eles são. Na vida real, você teria para todos os campos.
-
     public Long getId() {
         return id;
     }
