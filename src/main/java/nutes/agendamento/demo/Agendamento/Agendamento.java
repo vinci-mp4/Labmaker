@@ -20,6 +20,8 @@ public class Agendamento {
     private LocalDateTime dataHora;
     private String maquina;
     private String material;
+    private String codigoProtocolo;
+    private LocalDateTime dataHoraConclusao;
 
     // Todo agendamento nasce como pendente até um técnico mudar isso
     private String status = "PENDENTE";
@@ -27,6 +29,14 @@ public class Agendamento {
     // 4. Construtor Vazio (O Spring Boot exige isso para funcionar nos bastidores)
     public Agendamento() {
     }
+
+    public String getCodigoProtocolo() { return codigoProtocolo; }
+
+    public void setCodigoProtocolo(String codigoProtocolo) { this.codigoProtocolo = codigoProtocolo; }
+
+    public LocalDateTime getDataHoraConclusao() { return dataHoraConclusao; }
+
+    public void setDataHoraConclusao(LocalDateTime dataHoraConclusao) { this.dataHoraConclusao = dataHoraConclusao; }
 
     public Long getId() {
         return id;
