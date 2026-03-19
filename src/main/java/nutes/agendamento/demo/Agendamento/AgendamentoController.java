@@ -5,6 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -21,18 +22,30 @@ public class AgendamentoController {
     // 2. Quando o usuário digitar o endereço do site (Ex: localhost:8080/painel)
     @GetMapping("/painel")
     public String mostrarPainel(Model model) {
-
-        // Busca os dados filtrados direto do banco
         List<Agendamento> pendentes = repository.findByStatus("PENDENTE");
         List<Agendamento> aprovados = repository.findByStatus("APROVADO");
         List<Agendamento> negados = repository.findByStatus("NEGADO");
 
-        // Coloca em três "bandejas" diferentes para o HTML
+        // Nova linha buscando os concluídos
+        List<Agendamento> concluidos = repository.findByStatus("CONCLUIDO");
+
         model.addAttribute("pendentes", pendentes);
         model.addAttribute("aprovados", aprovados);
         model.addAttribute("negados", negados);
 
+        // Nova linha enviando para a tela
+        model.addAttribute("concluidos", concluidos);
+
         return "painel-tecnico";
+    }
+
+    // Rota para apagar o agendamento do banco de dados
+    @GetMapping("/deletar/{id}")
+    public String deletarAgendamento(@PathVariable Long id,
+                                     @RequestParam(required = false, defaultValue = "pendentes") String aba) {
+        repository.deleteById(id);
+        // Redireciona devolvendo o nome da aba na URL
+        return "redirect:/painel?aba=" + aba;
     }
 
     // A porta da frente do site
@@ -70,19 +83,15 @@ public class AgendamentoController {
     // import org.springframework.web.bind.annotation.PathVariable;
 
     @GetMapping("/atualizar-status/{id}/{novoStatus}")
-    public String atualizarStatus(@PathVariable Long id, @PathVariable String novoStatus) {
-
-        // 1. Busca o agendamento específico no banco de dados usando o ID
+    public String atualizarStatus(@PathVariable Long id, @PathVariable String novoStatus,
+                                  @RequestParam(required = false, defaultValue = "pendentes") String aba) {
         Agendamento pedido = repository.findById(id).orElse(null);
-
-        // 2. Se o pedido existir, altera o texto do status e salva por cima no banco
         if (pedido != null) {
             pedido.setStatus(novoStatus);
             repository.save(pedido);
         }
-
-        // 3. Recarrega a página do painel para o técnico ver a mudança na hora
-        return "redirect:/painel";
+        // Redireciona devolvendo o nome da aba na URL
+        return "redirect:/painel?aba=" + aba;
     }
 
 }

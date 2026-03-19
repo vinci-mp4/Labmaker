@@ -18,13 +18,16 @@
         <div class="card-header bg-white">
             <ul class="nav nav-tabs card-header-tabs" id="painelTabs" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link active text-warning" data-bs-toggle="tab" data-bs-target="#aba-pendentes" type="button">⏳ Pendentes</button>
+                    <button class="nav-link active text-warning" id="tab-pendentes" data-bs-toggle="tab" data-bs-target="#aba-pendentes" type="button">⏳ Pendentes</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link text-success" data-bs-toggle="tab" data-bs-target="#aba-aprovados" type="button">✅ Aprovados</button>
+                    <button class="nav-link text-success" id="tab-aprovados" data-bs-toggle="tab" data-bs-target="#aba-aprovados" type="button">✅ Aprovados</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link text-danger" data-bs-toggle="tab" data-bs-target="#aba-negados" type="button">❌ Negados</button>
+                    <button class="nav-link text-danger" id="tab-negados" data-bs-toggle="tab" data-bs-target="#aba-negados" type="button">❌ Negados</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link text-primary" id="tab-concluidos" data-bs-toggle="tab" data-bs-target="#aba-concluidos" type="button">🏁 Concluídos</button>
                 </li>
             </ul>
         </div>
@@ -34,9 +37,7 @@
 
                 <div class="tab-pane fade show active" id="aba-pendentes">
                     <table class="table table-hover">
-                        <thead>
-                        <tr><th>ID</th><th>Visitante</th><th>Máquina</th><th>Material</th><th>Data</th><th>Ações</th></tr>
-                        </thead>
+                        <thead><tr><th>ID</th><th>Visitante</th><th>Máquina</th><th>Material</th><th>Data</th><th>Ações</th></tr></thead>
                         <tbody>
                         <tr th:each="agendamento : ${pendentes}">
                             <td th:text="${agendamento.id}"></td>
@@ -45,22 +46,18 @@
                             <td th:text="${agendamento.material}"></td>
                             <td th:text="${#temporals.format(agendamento.dataHora, 'dd/MM/yyyy HH:mm')}"></td>
                             <td>
-                                <a th:href="@{/atualizar-status/{id}/APROVADO(id=${agendamento.id})}" class="btn btn-success btn-sm">Aprovar</a>
-                                <a th:href="@{/atualizar-status/{id}/NEGADO(id=${agendamento.id})}" class="btn btn-danger btn-sm">Negar</a>
+                                <a th:href="@{/atualizar-status/{id}/APROVADO(id=${agendamento.id}, aba='pendentes')}" class="btn btn-success btn-sm">Aprovar</a>
+                                <a th:href="@{/atualizar-status/{id}/NEGADO(id=${agendamento.id}, aba='pendentes')}" class="btn btn-danger btn-sm">Negar</a>
                             </td>
                         </tr>
-                        <tr th:if="${#lists.isEmpty(pendentes)}">
-                            <td colspan="6" class="text-center text-muted">Nenhum agendamento pendente.</td>
-                        </tr>
+                        <tr th:if="${#lists.isEmpty(pendentes)}"><td colspan="6" class="text-center text-muted">Nenhum agendamento pendente.</td></tr>
                         </tbody>
                     </table>
                 </div>
 
                 <div class="tab-pane fade" id="aba-aprovados">
                     <table class="table table-hover">
-                        <thead>
-                        <tr><th>ID</th><th>Visitante</th><th>Máquina</th><th>Material</th><th>Data</th></tr>
-                        </thead>
+                        <thead><tr><th>ID</th><th>Visitante</th><th>Máquina</th><th>Material</th><th>Data</th><th>Ações</th></tr></thead>
                         <tbody>
                         <tr th:each="agendamento : ${aprovados}">
                             <td th:text="${agendamento.id}"></td>
@@ -68,19 +65,18 @@
                             <td th:text="${agendamento.maquina}"></td>
                             <td th:text="${agendamento.material}"></td>
                             <td th:text="${#temporals.format(agendamento.dataHora, 'dd/MM/yyyy HH:mm')}"></td>
+                            <td>
+                                <a th:href="@{/atualizar-status/{id}/CONCLUIDO(id=${agendamento.id}, aba='aprovados')}" class="btn btn-primary btn-sm">Marcar como Concluído</a>
+                            </td>
                         </tr>
-                        <tr th:if="${#lists.isEmpty(aprovados)}">
-                            <td colspan="5" class="text-center text-muted">Nenhum agendamento aprovado ainda.</td>
-                        </tr>
+                        <tr th:if="${#lists.isEmpty(aprovados)}"><td colspan="6" class="text-center text-muted">Nenhum agendamento aprovado ainda.</td></tr>
                         </tbody>
                     </table>
                 </div>
 
                 <div class="tab-pane fade" id="aba-negados">
                     <table class="table table-hover">
-                        <thead>
-                        <tr><th>ID</th><th>Visitante</th><th>Máquina</th><th>Material</th><th>Data</th></tr>
-                        </thead>
+                        <thead><tr><th>ID</th><th>Visitante</th><th>Máquina</th><th>Material</th><th>Data</th><th>Ações</th></tr></thead>
                         <tbody>
                         <tr th:each="agendamento : ${negados}">
                             <td th:text="${agendamento.id}"></td>
@@ -88,10 +84,30 @@
                             <td th:text="${agendamento.maquina}"></td>
                             <td th:text="${agendamento.material}"></td>
                             <td th:text="${#temporals.format(agendamento.dataHora, 'dd/MM/yyyy HH:mm')}"></td>
+                            <td>
+                                <a th:href="@{/deletar/{id}(id=${agendamento.id}, aba='negados')}" class="btn btn-danger btn-sm" onclick="return confirm('Apagar este registro permanentemente?')">🗑️ Apagar</a>
+                            </td>
                         </tr>
-                        <tr th:if="${#lists.isEmpty(negados)}">
-                            <td colspan="5" class="text-center text-muted">Nenhum agendamento negado.</td>
+                        <tr th:if="${#lists.isEmpty(negados)}"><td colspan="6" class="text-center text-muted">Nenhum agendamento negado.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="tab-pane fade" id="aba-concluidos">
+                    <table class="table table-hover">
+                        <thead><tr><th>ID</th><th>Visitante</th><th>Máquina</th><th>Material</th><th>Data</th><th>Ações</th></tr></thead>
+                        <tbody>
+                        <tr th:each="agendamento : ${concluidos}">
+                            <td th:text="${agendamento.id}"></td>
+                            <td th:text="${agendamento.nomeUsuario}"></td>
+                            <td th:text="${agendamento.maquina}"></td>
+                            <td th:text="${agendamento.material}"></td>
+                            <td th:text="${#temporals.format(agendamento.dataHora, 'dd/MM/yyyy HH:mm')}"></td>
+                            <td>
+                                <a th:href="@{/deletar/{id}(id=${agendamento.id}, aba='concluidos')}" class="btn btn-danger btn-sm" onclick="return confirm('Apagar este registro permanentemente?')">🗑️ Apagar</a>
+                            </td>
                         </tr>
+                        <tr th:if="${#lists.isEmpty(concluidos)}"><td colspan="6" class="text-center text-muted">Nenhum histórico de conclusão.</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -100,6 +116,23 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Captura o parâmetro '?aba=' da URL
+        const parametros = new URLSearchParams(window.location.search);
+        const abaAtiva = parametros.get('aba');
+
+        // Se existir uma aba na URL, o Bootstrap aciona o clique nela automaticamente
+        if (abaAtiva) {
+            const botaoAba = document.getElementById('tab-' + abaAtiva);
+            if (botaoAba) {
+                const tab = new bootstrap.Tab(botaoAba);
+                tab.show();
+            }
+        }
+    });
+</script>
 
 </body>
 </html>
