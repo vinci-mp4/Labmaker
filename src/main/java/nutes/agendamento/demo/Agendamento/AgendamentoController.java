@@ -21,13 +21,17 @@ public class AgendamentoController {
     // 2. Quando o usuário digitar o endereço do site (Ex: localhost:8080/painel)
     @GetMapping("/painel")
     public String mostrarPainel(Model model) {
-        // O garçom vai no banco de dados e pega TODOS os agendamentos
-        List<Agendamento> todosOsAgendamentos = repository.findAll();
 
-        // Ele coloca esses dados em uma "bandeja" chamada 'agendamentos' para a tela poder usar
-        model.addAttribute("agendamentos", todosOsAgendamentos);
+        // Busca os dados filtrados direto do banco
+        List<Agendamento> pendentes = repository.findByStatus("PENDENTE");
+        List<Agendamento> aprovados = repository.findByStatus("APROVADO");
+        List<Agendamento> negados = repository.findByStatus("NEGADO");
 
-        // Ele devolve a página HTML chamada "painel-tecnico.html"
+        // Coloca em três "bandejas" diferentes para o HTML
+        model.addAttribute("pendentes", pendentes);
+        model.addAttribute("aprovados", aprovados);
+        model.addAttribute("negados", negados);
+
         return "painel-tecnico";
     }
 
