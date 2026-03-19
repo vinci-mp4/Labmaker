@@ -8,7 +8,12 @@
 <body class="bg-light">
 
 <div class="container mt-5" style="max-width: 600px;">
-    <h2 class="mb-4">🚀 Solicitar Máquina - MakerLab</h2>
+    <h2 class="mb-4"> Solicitar Máquina - MakerLab</h2>
+
+    <div th:if="${param.sucesso}" class="alert alert-success alert-dismissible fade show" role="alert">
+        ✅ <strong>Pronto!</strong> Sua solicitação foi enviada e está aguardando a aprovação do técnico.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
 
     <div class="card shadow-sm">
         <div class="card-body">

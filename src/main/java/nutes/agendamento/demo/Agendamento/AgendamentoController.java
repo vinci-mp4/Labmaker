@@ -51,6 +51,6 @@ public class AgendamentoController {
         repository.save(agendamento);
 
         // Redireciona o visitante para a tela do painel só pra gente ver a mágica funcionando na hora
-        return "redirect:/painel";
+        return "redirect:/solicitar?sucesso";
     }
 }
