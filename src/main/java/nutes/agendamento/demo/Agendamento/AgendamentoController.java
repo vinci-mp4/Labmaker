@@ -30,6 +30,13 @@ public class AgendamentoController {
         return "painel-tecnico";
     }
 
+    // A porta da frente do site
+    @GetMapping("/")
+    public String paginaInicial() {
+        // Redireciona o visitante automaticamente para a tela de login do Spring Security
+        return "redirect:/login";
+    }
+
     // 1. Porta para MOSTRAR a tela de formulário (GET)
     @GetMapping("/solicitar")
     public String mostrarFormulario() {
