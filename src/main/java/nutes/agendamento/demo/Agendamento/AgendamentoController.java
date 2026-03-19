@@ -3,6 +3,7 @@ package nutes.agendamento.demo.Agendamento;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
@@ -60,4 +61,24 @@ public class AgendamentoController {
         // Redireciona o visitante para a tela do painel só pra gente ver a mágica funcionando na hora
         return "redirect:/solicitar?sucesso";
     }
+
+    // Adicione a importação do @PathVariable lá no topo do arquivo junto com as outras, se o IntelliJ pedir:
+    // import org.springframework.web.bind.annotation.PathVariable;
+
+    @GetMapping("/atualizar-status/{id}/{novoStatus}")
+    public String atualizarStatus(@PathVariable Long id, @PathVariable String novoStatus) {
+
+        // 1. Busca o agendamento específico no banco de dados usando o ID
+        Agendamento pedido = repository.findById(id).orElse(null);
+
+        // 2. Se o pedido existir, altera o texto do status e salva por cima no banco
+        if (pedido != null) {
+            pedido.setStatus(novoStatus);
+            repository.save(pedido);
+        }
+
+        // 3. Recarrega a página do painel para o técnico ver a mudança na hora
+        return "redirect:/painel";
+    }
+
 }

@@ -33,8 +33,8 @@
                         <span class="badge bg-warning text-dark" th:text="${agendamento.status}">PENDENTE</span>
                     </td>
                     <td>
-                        <button class="btn btn-success btn-sm">Aprovar</button>
-                        <button class="btn btn-danger btn-sm">Negar</button>
+                        <a th:href="@{/atualizar-status/{id}/APROVADO(id=${agendamento.id})}" class="btn btn-success btn-sm">Aprovar</a>
+                        <a th:href="@{/atualizar-status/{id}/NEGADO(id=${agendamento.id})}" class="btn btn-danger btn-sm">Negar</a>
                     </td>
                 </tr>
 
