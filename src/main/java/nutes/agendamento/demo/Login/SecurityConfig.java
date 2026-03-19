@@ -48,16 +48,17 @@ public class SecurityConfig {
                 )
 
                 // 3. A MÁGICA DO REDIRECIONAMENTO
+
                 .formLogin(form -> form
+                        .loginPage("/login") // <-- AQUI! Avisamos sobre a página customizada
                         .successHandler((request, response, authentication) -> {
-                            // Verifica os crachás de quem acabou de logar
                             for (GrantedAuthority autorizacao : authentication.getAuthorities()) {
                                 if (autorizacao.getAuthority().equals("ROLE_ADMIN")) {
-                                    response.sendRedirect("/painel"); // Se for admin, joga pro painel
+                                    response.sendRedirect("/painel");
                                     return;
                                 }
                             }
-                            response.sendRedirect("/solicitar"); // Se for usuário comum, joga pro formulário
+                            response.sendRedirect("/solicitar");
                         })
                         .permitAll()
                 );

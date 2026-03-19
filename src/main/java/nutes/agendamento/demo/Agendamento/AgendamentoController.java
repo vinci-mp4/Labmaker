@@ -55,6 +55,12 @@ public class AgendamentoController {
         return "redirect:/login";
     }
 
+    // Rota para a nova tela de login customizada
+    @GetMapping("/login")
+    public String telaLogin() {
+        return "login";
+    }
+
     // 1. Porta para MOSTRAR a tela de formulário (GET)
     @GetMapping("/solicitar")
     public String mostrarFormulario() {
