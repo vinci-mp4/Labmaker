@@ -37,10 +37,10 @@
 
                 <div class="tab-pane fade show active" id="aba-pendentes">
                     <table class="table table-hover">
-                        <thead><tr><th>ID</th><th>Visitante</th><th>Máquina</th><th>Material</th><th>Data</th><th>Ações</th></tr></thead>
+                        <thead><tr><th>Protocolo</th><th>Visitante</th><th>Máquina</th><th>Material</th><th>Data</th><th>Ações</th></tr></thead>
                         <tbody>
                         <tr th:each="agendamento : ${pendentes}">
-                            <td th:text="${agendamento.id}"></td>
+                            <td th:text="${agendamento.codigoProtocolo}"></td>
                             <td th:text="${agendamento.nomeUsuario}"></td>
                             <td th:text="${agendamento.maquina}"></td>
                             <td th:text="${agendamento.material}"></td>
@@ -57,10 +57,10 @@
 
                 <div class="tab-pane fade" id="aba-aprovados">
                     <table class="table table-hover">
-                        <thead><tr><th>ID</th><th>Visitante</th><th>Máquina</th><th>Material</th><th>Data</th><th>Ações</th></tr></thead>
+                        <thead><tr><th>Protocolo</th><th>Visitante</th><th>Máquina</th><th>Material</th><th>Data</th><th>Ações</th></tr></thead>
                         <tbody>
                         <tr th:each="agendamento : ${aprovados}">
-                            <td th:text="${agendamento.id}"></td>
+                            <td th:text="${agendamento.codigoProtocolo}"></td>
                             <td th:text="${agendamento.nomeUsuario}"></td>
                             <td th:text="${agendamento.maquina}"></td>
                             <td th:text="${agendamento.material}"></td>
@@ -76,10 +76,10 @@
 
                 <div class="tab-pane fade" id="aba-negados">
                     <table class="table table-hover">
-                        <thead><tr><th>ID</th><th>Visitante</th><th>Máquina</th><th>Material</th><th>Data</th><th>Ações</th></tr></thead>
+                        <thead><tr><th>Protocolo</th><th>Visitante</th><th>Máquina</th><th>Material</th><th>Data</th><th>Ações</th></tr></thead>
                         <tbody>
                         <tr th:each="agendamento : ${negados}">
-                            <td th:text="${agendamento.id}"></td>
+                            <td th:text="${agendamento.codigoProtocolo}"></td>
                             <td th:text="${agendamento.nomeUsuario}"></td>
                             <td th:text="${agendamento.maquina}"></td>
                             <td th:text="${agendamento.material}"></td>
@@ -95,14 +95,15 @@
 
                 <div class="tab-pane fade" id="aba-concluidos">
                     <table class="table table-hover">
-                        <thead><tr><th>ID</th><th>Visitante</th><th>Máquina</th><th>Material</th><th>Data</th><th>Ações</th></tr></thead>
+                        <thead><tr><th>Protocolo</th><th>Visitante</th><th>Máquina</th><th>Material</th><th>Data</th><th>Finalizado em</th><th>Ações</th></tr></thead>
                         <tbody>
                         <tr th:each="agendamento : ${concluidos}">
-                            <td th:text="${agendamento.id}"></td>
+                            <td th:text="${agendamento.codigoProtocolo}"></td>
                             <td th:text="${agendamento.nomeUsuario}"></td>
                             <td th:text="${agendamento.maquina}"></td>
                             <td th:text="${agendamento.material}"></td>
                             <td th:text="${#temporals.format(agendamento.dataHora, 'dd/MM/yyyy HH:mm')}"></td>
+                            <td th:text="${#temporals.format(agendamento.dataHoraConclusao, 'dd/MM/yyyy HH:mm')}"></td>
                             <td>
                                 <a th:href="@{/deletar/{id}(id=${agendamento.id}, aba='concluidos')}" class="btn btn-danger btn-sm" onclick="return confirm('Apagar este registro permanentemente?')">🗑️ Apagar</a>
                             </td>

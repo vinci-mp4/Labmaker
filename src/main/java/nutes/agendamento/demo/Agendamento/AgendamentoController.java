@@ -70,18 +70,22 @@ public class AgendamentoController {
     // 2. Porta para RECEBER e SALVAR os dados do formulário (POST)
     @PostMapping("/solicitar")
     public String salvarAgendamento(Agendamento agendamento) {
-        // O Spring Boot é inteligente: ele pega os dados do HTML e já monta o objeto "agendamento" pra gente.
-
-        // Forçamos o status inicial como PENDENTE por segurança
         agendamento.setStatus("PENDENTE");
-
-        // Adicionamos a data e hora exata de agora automaticamente
         agendamento.setDataHora(java.time.LocalDateTime.now());
 
-        // Mandamos o repositório salvar de verdade no banco de dados H2
-        repository.save(agendamento);
+        // 1. Salva a primeira vez para o banco de dados gerar o ID numérico (Ex: 7)
+        Agendamento salvo = repository.save(agendamento);
 
-        // Redireciona o visitante para a tela do painel só pra gente ver a mágica funcionando na hora
+        // 2. Pega as 3 primeiras letras da máquina escolhida (Ex: "Impressora 3D" vira "IMP")
+        String prefixo = salvo.getMaquina().substring(0, 3).toUpperCase();
+
+        // 3. Pega o ID numérico e formata para ter sempre 3 dígitos (Ex: 7 vira "007")
+        String numeroFormatado = String.format("%04d", salvo.getId());
+
+        // 4. Junta tudo (IMP007), guarda no objeto e salva atualizando o banco
+        salvo.setCodigoProtocolo(prefixo + numeroFormatado);
+        repository.save(salvo);
+
         return "redirect:/solicitar?sucesso";
     }
 
@@ -94,9 +98,14 @@ public class AgendamentoController {
         Agendamento pedido = repository.findById(id).orElse(null);
         if (pedido != null) {
             pedido.setStatus(novoStatus);
+
+            // NOVIDADE: Se o status novo for CONCLUIDO, bate o ponto com a hora exata
+            if (novoStatus.equals("CONCLUIDO")) {
+                pedido.setDataHoraConclusao(java.time.LocalDateTime.now());
+            }
+
             repository.save(pedido);
         }
-        // Redireciona devolvendo o nome da aba na URL
         return "redirect:/painel?aba=" + aba;
     }
 
