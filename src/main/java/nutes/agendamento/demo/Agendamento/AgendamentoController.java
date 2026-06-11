@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import java.security.Principal;
 
 import java.util.List;
 
@@ -67,22 +68,21 @@ public class AgendamentoController {
         return "formulario-visitante";
     }
 
-    // 2. Porta para RECEBER e SALVAR os dados do formulário (POST)
     @PostMapping("/solicitar")
-    public String salvarAgendamento(Agendamento agendamento) {
+    public String salvarAgendamento(Agendamento agendamento, Principal principal) {
+        // Força o sistema a usar o utilizador logado na sessão, anulando fraudes
+        agendamento.setNomeUsuario(principal.getName());
+
         agendamento.setStatus("PENDENTE");
         agendamento.setDataHora(java.time.LocalDateTime.now());
 
-        // 1. Salva a primeira vez para o banco de dados gerar o ID numérico (Ex: 7)
+        // Guarda a primeira vez para gerar o ID
         Agendamento salvo = repository.save(agendamento);
 
-        // 2. Pega as 3 primeiras letras da máquina escolhida (Ex: "Impressora 3D" vira "IMP")
+        // Lógica do protocolo
         String prefixo = salvo.getMaquina().substring(0, 3).toUpperCase();
-
-        // 3. Pega o ID numérico e formata para ter sempre 3 dígitos (Ex: 7 vira "007")
         String numeroFormatado = String.format("%04d", salvo.getId());
 
-        // 4. Junta tudo (IMP007), guarda no objeto e salva atualizando o banco
         salvo.setCodigoProtocolo(prefixo + numeroFormatado);
         repository.save(salvo);
 
