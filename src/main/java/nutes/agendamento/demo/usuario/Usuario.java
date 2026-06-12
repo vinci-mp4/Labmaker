@@ -1,7 +1,9 @@
-package nutes.agendamento.demo.Usuario;
+package nutes.agendamento.demo.usuario;
 
 import jakarta.persistence.*;
 
+@Entity
+@Table(name = "usuarios")
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
